@@ -14,7 +14,7 @@ RepoToText is a web app that scrapes a GitHub repository and converts its files 
 
 # Prompt Example
 
-This file is a .txt file that contains an entire GitHub repository with all of the files separated by delimiters (''') The file paths are the titles after the delimiters. ('''--- FILE AND FILEPATH HERE ---) *Add your idea here* : (Example) Please create a react front end that will work with the back end 
+This file is a .txt file that contains an entire GitHub repository with all of the files separated by delimiters (''') The file paths are the titles after the delimiters. ('''--- FILE AND FILEPATH HERE ---) *Add your idea here (Example)*: Please create a react front end that will work with the back end 
 
 ## Info
 
