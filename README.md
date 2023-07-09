@@ -88,4 +88,5 @@ To run the application, follow these steps:
 - [ ] create a small desktop app via PyQT or an executable file
 - [ ] add ability to store change history and update .txt to reflect working changes
 - [ ] add checker function to make sure .txt is current repo version
-- [ ] Adjust UI for flow
+- [ ] adjust UI for flow
+- [ ] explore prompt ideas including breaking the prompts into discrete steps that nudge the model along
