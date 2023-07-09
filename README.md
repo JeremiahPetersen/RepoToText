@@ -85,7 +85,7 @@ To run the application, follow these steps:
 # TODO
 
 - [ ] add in the ability to work with private repositories
-- [ ] create a small desktop app via PyQT or as an executable file
+- [ ] create a small desktop app via PyQT or an executable file
 - [ ] add ability to store change history and update .txt to reflect working changes
 - [ ] add checker function to make sure .txt is current repo version
 - [ ] Adjust UI for flow
