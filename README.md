@@ -78,7 +78,18 @@ To run the application, follow these steps:
 
 4. Access the application in a web browser and enter the GitHub repository URL and documentation URL (if available).
 
-5. Click the "Submit" button to initiate the scraping process. The converted text will be displayed in the output area.
+5. Click the "Submit" button to initiate the scraping process. The converted text will be displayed in the output area, and it will also be saved to the project root directory.
 
-6. Optionally, click the "Copy Text" button to copy the generated text to the clipboard.
+6. You can also click the "Copy Text" button to copy the generated text to the clipboard.
+
+# TODO
+
+- [ ] add in the ability to work with private repositories
+- [ ] create a small desktop app via PyQT or as an executable file
+- [ ] add ability to store change history and update .txt to reflect working changes
+- [ ] add checker function to make sure .txt is current repo version
+- [ ] Adjust UI for flow
+- [ ] 
+
+
 
