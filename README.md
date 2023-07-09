@@ -89,7 +89,3 @@ To run the application, follow these steps:
 - [ ] add ability to store change history and update .txt to reflect working changes
 - [ ] add checker function to make sure .txt is current repo version
 - [ ] Adjust UI for flow
-- [ ] 
-
-
-
