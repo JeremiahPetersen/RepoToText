@@ -12,6 +12,10 @@ https://chat.openai.com/share/0670c1ec-a8a8-4568-ad09-bb9b152e1f0b
 
 RepoToText is a web app that scrapes a GitHub repository and converts its files into a single organized .txt. It allows you to enter the URL of a GitHub repository and an optional documentation URL (the doc info will append to the top of the .txt). The app retrieves the contents of the repository, including all files and directories and also fetches the documentation from the provided URL and includes it in a single organized text file.  The .txt file will be saved in the root project directory with user/repo/timestamp info.  This file can then be uploaded to Code Interpreter and you can use the chatbot to interact with the entire GitHub repo.  Add your GitHub API Key in the .env file 
 
+# Prompt Example
+
+This file is a .txt file that contains an entire GitHub repository with all of the files separated by delimiters (''') The file paths are the titles after the delimiters. ('''--- FILE AND FILEPATH HERE ---) *Add your idea here* : (Example) Please create a react front end that will work with the back end 
+
 ## Info
 
 - creates a.txt with ('''---) seperating each file from the repo.
