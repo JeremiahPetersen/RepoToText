@@ -82,7 +82,7 @@ To run the application, follow these steps:
 
 6. You can also click the "Copy Text" button to copy the generated text to the clipboard.
 
-# TODO
+## TODO
 
 - [ ] add in the ability to work with private repositories
 - [ ] create a small desktop app via PyQT or an executable file
