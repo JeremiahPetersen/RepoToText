@@ -1,3 +1,8 @@
+![repo to text 5](https://github.com/JeremiahPetersen/RepoToText/assets/118206017/0d65016d-6388-48e0-b833-4ea1a169acfe)
+
+![repo to text 6](https://github.com/JeremiahPetersen/RepoToText/assets/118206017/31646e04-10f4-4757-8874-39a639a57670)
+
+
 # RepoToText
 
 RepoToText is a web app that scrapes a GitHub repository and converts its files into a single organized .txt. It allows you to enter the URL of a GitHub repository and an optional documentation URL (the doc info will append to the top of the .txt). The app retrieves the contents of the repository, including all files and directories and also fetches the documentation from the provided URL and includes it in a single organized text file.  The .txt file will be saved in the root project directory with user/repo/timestamp info.  This file can then be uploaded to Code Interpreter and you can use the chatbot to interact with the entire GitHub repo. 
