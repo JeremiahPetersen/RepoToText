@@ -1,0 +1,11 @@
+# Python dependencies
+Flask
+Flask-Cors
+beautifulsoup4
+retry
+github3.py
+
+# Node.js dependencies
+axios
+react
+react-dom
