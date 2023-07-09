@@ -7,7 +7,14 @@
 
 RepoToText is a web app that scrapes a GitHub repository and converts its files into a single organized .txt. It allows you to enter the URL of a GitHub repository and an optional documentation URL (the doc info will append to the top of the .txt). The app retrieves the contents of the repository, including all files and directories and also fetches the documentation from the provided URL and includes it in a single organized text file.  The .txt file will be saved in the root project directory with user/repo/timestamp info.  This file can then be uploaded to Code Interpreter and you can use the chatbot to interact with the entire GitHub repo.  Add your GitHub API Key in the .env file 
 
-## Technologies Used
+## Info
+
+- creates .txt with (''') seperating each file.
+- each file in the repo has a header after (''') with the file path
+- the .txt file is saved in the root directory
+- you can add a url to a doc page and the doc page will append to the top of the .txt file (great to use when you are using tech that came out after Sep 2021)
+
+## Tech Used
 
 - Frontend: React.js
 - Backend: Python Flask
@@ -20,7 +27,7 @@ The frontend of the app is implemented using React.js. The main component is `Ap
 
 ### App.js
 
-This file defines the main React component of the application. It uses React hooks to manage the state of input fields and the response received from the backend.
+This file defines the main React component of the app. It uses React hooks to manage the state of input fields and the response received from the backend.
 
 - `useState` hooks are used to define the state variables `repoUrl`, `docUrl`, and `response`, which hold the values of the repository URL, documentation URL, and the response from the backend API, respectively.
 
