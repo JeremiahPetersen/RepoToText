@@ -9,7 +9,7 @@ RepoToText is a web app that scrapes a GitHub repository and converts its files 
 
 ## Info
 
-- creates .txt with (''') seperating each file.
+- creates .txt with (''') seperating each file from the repo.
 - each file in the repo has a header after (''') with the file path
 - the .txt file is saved in the root directory
 - you can add a url to a doc page and the doc page will append to the top of the .txt file (great to use when you are using tech that came out after Sep 2021)
