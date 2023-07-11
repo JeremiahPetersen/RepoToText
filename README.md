@@ -1,6 +1,6 @@
 ![repo to text 5](https://github.com/JeremiahPetersen/RepoToText/assets/118206017/0d65016d-6388-48e0-b833-4ea1a169acfe)
 
-![repo to text 6](https://github.com/JeremiahPetersen/RepoToText/assets/118206017/31646e04-10f4-4757-8874-39a639a57670)
+![repo to text 7](https://github.com/JeremiahPetersen/RepoToText/assets/118206017/7d28fa8f-8bb1-4ddd-99f3-b33ddb26f0e9)
 
 ## Demo
 
@@ -78,9 +78,11 @@ To run the application, follow these steps:
 
 4. Access the application in a web browser and enter the GitHub repository URL and documentation URL (if available).
 
-5. Click the "Submit" button to initiate the scraping process. The converted text will be displayed in the output area, and it will also be saved to the project root directory.
+5. Choose All files or choose specific file types.
 
-6. You can also click the "Copy Text" button to copy the generated text to the clipboard.
+6. Click the "Submit" button to initiate the scraping process. The converted text will be displayed in the output area, and it will also be saved to the project root directory.
+
+7. You can also click the "Copy Text" button to copy the generated text to the clipboard.
 
 ## TODO
 
@@ -88,5 +90,5 @@ To run the application, follow these steps:
 - [ ] create a small desktop app via PyQT or an executable file
 - [ ] add ability to store change history and update .txt to reflect working changes
 - [ ] add checker function to make sure .txt is current repo version
-- [ ] adjust UI for flow, including change textarea output width, adding file management and history, and adding a button to check repo update date against .txt date 
+- [ ] adjust UI for flow, including change textarea output width, adding file management and history UI
 - [ ] explore prompt ideas including breaking the prompts into discrete steps that nudge the model along
