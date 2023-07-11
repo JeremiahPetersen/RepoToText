@@ -26,6 +26,39 @@
   font-size: 1em;
 }
 
+.fileSelectionContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+.fileSelectionContainer div {
+  display: flex;
+  align-items: center;
+}
+
+.fileSelectionContainer label {
+  margin-left: 5px;
+}
+
+.fileTypesContainer {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr); /* Adjust as needed */
+  gap: 1px;
+  margin-bottom: 20px;
+}
+
+.fileTypesContainer div {
+  display: flex;
+  align-items: center;
+}
+
+.fileTypesContainer label {
+  margin-left: 5px;
+}
+
 .outputArea {
   height: 50vh;
   margin: 10px 0;

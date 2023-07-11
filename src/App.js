@@ -3,9 +3,61 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
+  const FILE_TYPES = [
+    ".txt",
+    ".py",
+    ".js",
+    ".sql",
+    ".env",
+    ".json",
+    ".html",
+    ".css",
+    ".java",
+    ".cpp",
+    ".c",
+    ".php",
+    ".rb",
+    ".xml",
+    ".yml",
+    ".md",
+    ".sh",
+    ".swift",
+    ".h",
+    ".pyw",
+    ".asm",
+    ".asp",
+    ".aspx",
+    ".bat",
+    ".cmd",
+    ".cls",
+    ".coffee",
+    ".erb",
+    ".go",
+    ".groovy",
+    ".htaccess",
+    ".java",
+    ".jsp",
+    ".lua",
+    ".make",
+    ".matlab",
+    ".pas",
+    ".perl",
+    ".pl",
+    ".ps1",
+    ".r",
+    ".scala",
+    ".scm",
+    ".sln",
+    ".vb",
+    ".vbs",
+    ".xhtml",
+    ".xsl",
+  ];
   const [repoUrl, setRepoUrl] = useState("");
   const [docUrl, setDocUrl] = useState("");
   const [response, setResponse] = useState("");
+  const [selectedFileTypes, setSelectedFileTypes] = useState([]);
+  const [fileSelection, setFileSelection] = useState("all");
 
   const handleRepoChange = (e) => {
     setRepoUrl(e.target.value);
@@ -15,13 +67,33 @@ function App() {
     setDocUrl(e.target.value);
   };
 
+  const handleFileTypeChange = (e) => {
+    if (e.target.checked) {
+      setSelectedFileTypes([...selectedFileTypes, e.target.value]);
+    } else {
+      setSelectedFileTypes(
+        selectedFileTypes.filter((fileType) => fileType !== e.target.value)
+      );
+    }
+  };
+
+  const handleFileSelectionChange = (e) => {
+    setFileSelection(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let fileTypesToSend = selectedFileTypes;
+    if (fileSelection === "all") {
+      fileTypesToSend = FILE_TYPES;
+    }
 
     try {
       const result = await axios.post("http://localhost:5000/scrape", {
         repoUrl,
         docUrl,
+        selectedFileTypes: fileTypesToSend,
       });
       setResponse(result.data.response);
     } catch (error) {
@@ -50,6 +122,40 @@ function App() {
           placeholder="Enter documentation URL (optional)"
           className="inputArea"
         />
+        <div className="fileSelectionContainer">
+          <div>
+            <input
+              type="radio"
+              value="all"
+              checked={fileSelection === "all"}
+              onChange={handleFileSelectionChange}
+            />
+            <label>All Files</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              value="select"
+              checked={fileSelection === "select"}
+              onChange={handleFileSelectionChange}
+            />
+            <label>Select File Types</label>
+          </div>
+        </div>
+        {fileSelection === "select" && (
+          <div className="fileTypesContainer">
+            {FILE_TYPES.map((fileType, index) => (
+              <div key={index}>
+                <input
+                  type="checkbox"
+                  value={fileType}
+                  onChange={handleFileTypeChange}
+                />
+                <label>{fileType}</label>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="buttonContainer">
         <button onClick={handleSubmit} className="transformButton">

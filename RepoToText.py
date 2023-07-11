@@ -13,10 +13,11 @@ app = Flask(__name__)
 CORS(app)
 
 class GithubRepoScraper:
-    def __init__(self, repo_name, doc_link=None):
+    def __init__(self, repo_name, doc_link=None, selected_file_types=[]):
         self.github_api_key = os.getenv("GITHUB_API_KEY")
         self.repo_name = repo_name
         self.doc_link = doc_link
+        self.selected_file_types = selected_file_types
 
     @retry(RateLimitExceededException, tries=5, delay=2, backoff=2)
     def fetch_all_files(self):
@@ -26,14 +27,16 @@ class GithubRepoScraper:
                 if content_file.type == "dir":
                     files_data += recursive_fetch_files(repo, repo.get_contents(content_file.path), content_file.path)
                 else:
-                    file_content = ""
-                    file_content += f"\n'''--- {content_file.path} ---\n"
-                    try:
-                        file_content += content_file.decoded_content.decode("utf-8")
-                    except:  # catch any decoding errors
-                        file_content += "[Content not decodable]"
-                    file_content += "\n'''"
-                    files_data.append(file_content)
+                    # Check if file type is in selected file types
+                    if any(content_file.name.endswith(file_type) for file_type in self.selected_file_types):
+                        file_content = ""
+                        file_content += f"\n'''--- {content_file.path} ---\n"
+                        try:
+                            file_content += content_file.decoded_content.decode("utf-8")
+                        except:  # catch any decoding errors
+                            file_content += "[Content not decodable]"
+                        file_content += "\n'''"
+                        files_data.append(file_content)
             return files_data
 
         github_instance = Github(self.github_api_key)
@@ -92,13 +95,14 @@ def scrape():
 
     repo_url = data.get('repoUrl')
     doc_url = data.get('docUrl')
+    selected_file_types = data.get('selectedFileTypes', [])
     
     if not repo_url:
         return jsonify({"error": "Repo URL not provided."}), 400
 
     repo_name = repo_url.split('github.com/')[-1]  # Extract repo name from URL
 
-    scraper = GithubRepoScraper(repo_name, doc_url)
+    scraper = GithubRepoScraper(repo_name, doc_url, selected_file_types)
     filename = scraper.run()
 
     with open(filename, 'r', encoding='utf-8') as file:
