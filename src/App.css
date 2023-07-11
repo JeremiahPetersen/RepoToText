@@ -15,7 +15,8 @@
   width: 100%;
 }
 
-.inputArea {
+.inputArea,
+.smallInputArea {
   height: auto;
   max-width: 600px;
   margin: 10px 0;
@@ -26,6 +27,12 @@
   font-size: 1em;
 }
 
+.smallInputArea {
+  max-width: 400px; /* Reduced width */
+  padding: 10px;
+  font-size: 0.85em;
+  margin-right: 10px; /* Added margin to the right */
+}
 .fileSelectionContainer {
   display: flex;
   align-items: center;
@@ -75,7 +82,8 @@
   gap: 10px;
 }
 
-.transformButton {
+.transformButton,
+.addButton {
   font-size: 1em;
   padding: 10px 20px;
   border-radius: 5px;
@@ -86,8 +94,14 @@
   transition: background-color 0.3s ease;
 }
 
-.transformButton:hover {
+.transformButton:hover,
+.addButton:hover {
   background-color: #0056b3;
+}
+
+.addButton {
+  padding: 5px 10px;
+  font-size: 0.85em;
 }
 
 .copyButton {

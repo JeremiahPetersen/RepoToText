@@ -3,7 +3,7 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
-  const FILE_TYPES = [
+  const [FILE_TYPES, setFileTypes] = useState([
     ".txt",
     ".py",
     ".js",
@@ -12,6 +12,8 @@ function App() {
     ".json",
     ".html",
     ".css",
+    ".md",
+    ".ts",
     ".java",
     ".cpp",
     ".c",
@@ -25,8 +27,6 @@ function App() {
     ".h",
     ".pyw",
     ".asm",
-    ".asp",
-    ".aspx",
     ".bat",
     ".cmd",
     ".cls",
@@ -52,12 +52,13 @@ function App() {
     ".vbs",
     ".xhtml",
     ".xsl",
-  ];
+  ]);
   const [repoUrl, setRepoUrl] = useState("");
   const [docUrl, setDocUrl] = useState("");
   const [response, setResponse] = useState("");
   const [selectedFileTypes, setSelectedFileTypes] = useState([]);
   const [fileSelection, setFileSelection] = useState("all");
+  const [customFileType, setCustomFileType] = useState("");
 
   const handleRepoChange = (e) => {
     setRepoUrl(e.target.value);
@@ -79,6 +80,13 @@ function App() {
 
   const handleFileSelectionChange = (e) => {
     setFileSelection(e.target.value);
+  };
+
+  const handleAddFileType = () => {
+    if (customFileType && !FILE_TYPES.includes(customFileType)) {
+      setFileTypes([...FILE_TYPES, customFileType]);
+    }
+    setCustomFileType("");
   };
 
   const handleSubmit = async (e) => {
@@ -154,6 +162,17 @@ function App() {
                 <label>{fileType}</label>
               </div>
             ))}
+            <div>
+              <input
+                value={customFileType}
+                onChange={(e) => setCustomFileType(e.target.value)}
+                placeholder="Enter new file type"
+                className="smallInputArea"
+              />
+              <button onClick={handleAddFileType} className="addButton">
+                Add
+              </button>
+            </div>
           </div>
         )}
       </div>
