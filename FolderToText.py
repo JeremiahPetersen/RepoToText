@@ -1,20 +1,21 @@
 import os
 import re
 from datetime import datetime
-from tkinter import Tk, Label, Button, Entry, StringVar, filedialog, messagebox
+from tkinter import Tk, Label, Button, Entry, StringVar, filedialog, messagebox, Radiobutton, IntVar
 
 class LocalRepoScraper:
-    def __init__(self, repo_paths, output_path, output_filename, selected_file_types=[]):
+    def __init__(self, repo_paths, output_path, output_filename, selected_file_types=[], filter_files=True):
         self.repo_paths = repo_paths
         self.output_path = output_path
         self.output_filename = output_filename
         self.selected_file_types = selected_file_types
+        self.filter_files = filter_files
 
     def fetch_all_files(self):
         files_data = []
         for file_path in self.repo_paths:
             # Check if file type is in selected file types
-            if any(file_path.endswith(file_type) for file_type in self.selected_file_types):
+            if not self.filter_files or any(file_path.endswith(file_type) for file_type in self.selected_file_types):
                 relative_path = os.path.basename(file_path)
                 file_content = ""
                 file_content += f"\n'''--- {relative_path} ---\n"
@@ -85,6 +86,12 @@ class FolderToTextGUI:
         self.output_filename_label = Label(master, text="Output Filename:")
         self.output_filename_entry = Entry(master)
 
+        self.filter_files = IntVar()
+        self.filter_files.set(1)  # Set filtering to be on by default
+        self.filter_files_label = Label(master, text="Filter Files:")
+        self.filter_files_on = Radiobutton(master, text="On", variable=self.filter_files, value=1)
+        self.filter_files_off = Radiobutton(master, text="Off", variable=self.filter_files, value=0)
+
         self.run_button = Button(master, text="Run", command=self.run)
 
         self.repo_path_label.grid(row=0, column=0, sticky="E")
@@ -99,15 +106,20 @@ class FolderToTextGUI:
         self.output_filename_label.grid(row=3, column=0, sticky="E")
         self.output_filename_entry.grid(row=3, column=1)
 
-        self.run_button.grid(row=4, column=1)
+        self.filter_files_label.grid(row=4, column=0, sticky="E")
+        self.filter_files_on.grid(row=4, column=1, sticky="W")
+        self.filter_files_off.grid(row=4, column=1)
+
+        self.run_button.grid(row=5, column=1)
 
         self.repo_paths = ()
         self.output_path = ""
 
     def browse_repo_path(self):
-        self.repo_paths = filedialog.askopenfilenames()
-        if not self.repo_paths:
+        new_repo_paths = filedialog.askopenfilenames()
+        if not new_repo_paths:
             return
+        self.repo_paths += new_repo_paths  # Add new selected files to existing ones
         self.repo_path_label.config(text=f"Selected Files: {len(self.repo_paths)}")
 
     def browse_output_path(self):
@@ -128,7 +140,7 @@ class FolderToTextGUI:
         if not self.output_path:
             messagebox.showerror("Error", "Please select an output path.")
             return
-        scraper = LocalRepoScraper(self.repo_paths, self.output_path, output_filename, selected_file_types)
+        scraper = LocalRepoScraper(self.repo_paths, self.output_path, output_filename, selected_file_types, bool(self.filter_files.get()))
         scraper.run()
 
 if __name__ == "__main__":
