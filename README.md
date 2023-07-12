@@ -18,7 +18,7 @@ This file is a .txt file that contains an entire GitHub repository with all of t
 
 ## FolderToText
 
-FolderToText.py is a script that allows you to turn a local folder, or local files, into a .txt in the same way RepoToText.py does.  Choose your files with browse (you can continue adding by clicking "Browse".  Once you have all of your files selected and uploaded with browse, type in the file type endings you want to copy with a ',' in between.  Example: .py , .js , .md , .ts --> Last, enter in the file name you want to appear and the output path.  The file will be written with your file name choice and a timestamp.
+FolderToText.py is a script that allows you to turn a local folder, or local files, into a .txt in the same way RepoToText.py does.  Choose your files with browse (you can continue adding by clicking "Browse".  Once you have all of your files selected and uploaded with browse, type in the file type endings you want to copy with a ',' in between.  Example: .py , .js , .md , .ts ---> You can also turn this off and it will add every file you uploaded to the .txt ---> Last, enter in the file name you want to appear and the output path.  The file will be written with your file name choice and a timestamp.
 
 ## Info
 
