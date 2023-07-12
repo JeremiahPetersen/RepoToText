@@ -16,6 +16,10 @@ RepoToText is a web app that scrapes a GitHub repository and converts its files 
 
 This file is a .txt file that contains an entire GitHub repository with all of the files separated by delimiters (''') The file paths are the titles after the delimiters. ('''--- FILE AND FILEPATH HERE ---) *Add your idea here (Example)*: Please create a react front end that will work with the back end 
 
+## FolderToText
+
+FolderToText.py is a script that allows you to turn a local folder, or local files, into a .txt in the same way RepoToText.py does.  Choose your files with browse (you can continue adding by clicking "Browse".  Once you have all of your files selected and uploaded with browse, type in the file type endings you want to copy with a ',' in between.  Example: .py , .js , .md , .ts --> Last, enter in the file name you want to appear and the output path.  The file will be written with your file name choice and a timestamp.
+
 ## Info
 
 - creates a.txt with ('''---) seperating each file from the repo.
