@@ -5,3 +5,7 @@
 .env.local
 .env.*.local
 .env
+
+reportWebVitals.js
+setupTests.js
+``` 
