@@ -28,10 +28,10 @@
 }
 
 .smallInputArea {
-  max-width: 400px; /* Reduced width */
+  max-width: 400px;
   padding: 10px;
   font-size: 0.85em;
-  margin-right: 10px; /* Added margin to the right */
+  margin-right: 10px;
 }
 .fileSelectionContainer {
   display: flex;
@@ -52,7 +52,7 @@
 .fileTypesContainer {
   margin-top: 10px;
   display: grid;
-  grid-template-columns: repeat(8, 1fr); /* Adjust as needed */
+  grid-template-columns: repeat(8, 1fr);
   gap: 1px;
   margin-bottom: 20px;
 }
@@ -78,7 +78,7 @@
 
 .buttonContainer {
   display: flex;
-  align-items: flex-start; /* Adjust alignment to the left */
+  align-items: flex-start;
   gap: 10px;
 }
 
