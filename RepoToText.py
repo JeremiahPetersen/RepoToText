@@ -3,6 +3,7 @@ This module handles the back end flask server for RepoToText
 """
 
 # pylint: disable=line-too-long
+# pylint: disable=
 
 from github import Github, RateLimitExceededException
 import os
@@ -18,7 +19,10 @@ app = Flask(__name__)
 CORS(app)
 
 class GithubRepoScraper:
-    def __init__(self, repo_name, doc_link=None, selected_file_types=[]):
+    """Scrape GitHub repositories."""
+    def __init__(self, repo_name, doc_link=None, selected_file_types=None):
+        if selected_file_types is None:
+            selected_file_types = []
         self.github_api_key = os.getenv("GITHUB_API_KEY")
         self.repo_name = repo_name
         self.doc_link = doc_link
@@ -26,11 +30,12 @@ class GithubRepoScraper:
 
     @retry(RateLimitExceededException, tries=5, delay=2, backoff=2)
     def fetch_all_files(self):
-        def recursive_fetch_files(repo, contents, path=""):
+        """Fetch all files from the GitHub repository."""
+        def recursive_fetch_files(repo, contents):
             files_data = []
             for content_file in contents:
                 if content_file.type == "dir":
-                    files_data += recursive_fetch_files(repo, repo.get_contents(content_file.path), content_file.path)
+                    files_data += recursive_fetch_files(repo, repo.get_contents(content_file.path))
                 else:
                     # Check if file type is in selected file types
                     if any(content_file.name.endswith(file_type) for file_type in self.selected_file_types):
@@ -51,6 +56,7 @@ class GithubRepoScraper:
         return files_data
 
     def scrape_doc(self):
+        """Scrape webpage."""
         if not self.doc_link:
             return ""
         try:
@@ -62,6 +68,7 @@ class GithubRepoScraper:
             return ""
 
     def write_to_file(self, files_data):
+        """Built .txt file with all of the repo's files"""
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         filename = f"{self.repo_name.replace('/', '_')}_{timestamp}.txt"
         with open(filename, "w", encoding='utf-8') as f:
@@ -75,6 +82,7 @@ class GithubRepoScraper:
         return filename
 
     def clean_up_text(self, filename):
+        """Remove line breaks after 2."""
         with open(filename, 'r', encoding='utf-8') as f:
             text = f.read()
         cleaned_text = re.sub('\n{3,}', '\n\n', text)
@@ -82,6 +90,7 @@ class GithubRepoScraper:
             f.write(cleaned_text)
 
     def run(self):
+        """Run RepoToText."""
         print("Fetching all files...")
         files_data = self.fetch_all_files()
 
@@ -96,6 +105,7 @@ class GithubRepoScraper:
 
 @app.route('/scrape', methods=['POST'])
 def scrape():
+    """Scrape GitHub repositories."""
     data = request.get_json()
 
     repo_url = data.get('repoUrl')
