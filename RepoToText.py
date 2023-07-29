@@ -3,16 +3,16 @@ This module handles the back end flask server for RepoToText
 """
 
 # pylint: disable=line-too-long
-# pylint: disable=
+# pylint: disable=C0103
 
-from github import Github, RateLimitExceededException
 import os
 from datetime import datetime
+import re
+from github import Github, RateLimitExceededException
 from bs4 import BeautifulSoup
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import re
 from retry import retry
 
 app = Flask(__name__)
@@ -111,7 +111,7 @@ def scrape():
     repo_url = data.get('repoUrl')
     doc_url = data.get('docUrl')
     selected_file_types = data.get('selectedFileTypes', [])
-    
+
     if not repo_url:
         return jsonify({"error": "Repo URL not provided."}), 400
 
