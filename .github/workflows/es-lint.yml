@@ -20,10 +20,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
-      - name: Install dependencies
+      - name: Install Node.js dependencies
         run: yarn install
       - name: Add node_modules to PATH
         run: export PATH="$PATH:$(yarn bin)"
+      - name: Install ESLint and required plugins
+        run: yarn add eslint eslint-plugin-react eslint-config-standard eslint-config-prettier --dev
       - name: ESLint
         run: eslint . --fix
       - name: Prettier

@@ -1,4 +1,3 @@
-# Python dependencies
 github
 datetime
 beautifulsoup4
@@ -6,9 +5,7 @@ requests
 flask
 flask-cors
 retry
-github.py
 
-# Node.js dependencies
 axios
 react
 react-dom
