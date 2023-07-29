@@ -22,6 +22,8 @@ jobs:
           node-version: "16"
       - name: Install dependencies
         run: yarn install
+      - name: Add node_modules to PATH
+        run: export PATH="$PATH:$(yarn bin)"
       - name: ESLint
         run: eslint . --fix
       - name: Prettier
