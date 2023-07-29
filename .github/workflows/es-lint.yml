@@ -20,9 +20,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
-      - name: install
+      - name: Install dependencies
         run: yarn install
       - name: ESLint
-        run: yarn run fix .
+        run: eslint . --fix
       - name: Prettier
         run: yarn prettier --write .
