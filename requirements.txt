@@ -1,9 +1,12 @@
 # Python dependencies
-Flask
-Flask-Cors
+github
+datetime
 beautifulsoup4
+requests
+flask
+flask-cors
 retry
-github3.py
+github.py
 
 # Node.js dependencies
 axios
