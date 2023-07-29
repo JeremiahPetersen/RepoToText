@@ -42,10 +42,21 @@ class GithubRepoScraper:
                     if any(content_file.name.endswith(file_type) for file_type in self.selected_file_types):
                         file_content = ""
                         file_content += f"\n'''--- {content_file.path} ---\n"
-                        try:
-                            file_content += content_file.decoded_content.decode("utf-8")
-                        except UnicodeDecodeError: # catch decoding errors
-                            file_content += "[Content not decodable]"
+
+                        if content_file.encoding == "base64":
+                            try:
+                                file_content += content_file.decoded_content.decode("utf-8")
+                            except UnicodeDecodeError: # catch decoding errors
+                                file_content += "[Content not decodable]"
+                        elif content_file.encoding == "none":
+                            # Handle files with encoding "none" here
+                            print(f"Warning: Skipping {content_file.path} due to unsupported encoding 'none'.")
+                            continue
+                        else:
+                            # Handle other unexpected encodings here
+                            print(f"Warning: Skipping {content_file.path} due to unexpected encoding '{content_file.encoding}'.")
+                            continue
+
                         file_content += "\n'''"
                         files_data.append(file_content)
             return files_data

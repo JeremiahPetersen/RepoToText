@@ -1,0 +1,627 @@
+*GitHub Repository "JeremiahPetersen/Textizer"*
+
+'''--- README.md ---
+![demo screenshot textizer](https://github.com/JeremiahPetersen/Textizer/assets/118206017/f28c681a-6c1c-4d29-985e-fa2f4cf94a32)
+
+![demo screenshot 2 textizer](https://github.com/JeremiahPetersen/Textizer/assets/118206017/c9d23c47-acf9-42c8-8b62-b3ccdfd8297f)
+
+# Textizer
+Text cleanup multi tool for removing whitespaces and line breaks, anonymizing identifiable information, and checking token count for use with ChatGPT or other Large Language Models.  There is also a decode feature to decode a previously anonymized text.  This project leverages the capabilities of the Hugging Face Transformers library and React library.
+
+## How to Use
+
+1. Clone the repository.
+2. Navigate to the directory containing `app.py` and run `python app.py` to start the Flask API at http://localhost:5000.
+3. Navigate to the directory containing `App.js` and run `npm install` followed by `npm start`. This starts the React application on http://localhost:3000.
+4. Open http://localhost:3000 in your web browser.
+5. Enter your text in the input text area.
+6. Click the 'Anonymize' button to replace all named entities with anonymized labels.
+7. Click the 'Remove Spaces' button to remove all spaces and line breaks.
+
+Remember - 'Anonymize' and 'Remove Spaces' operations are performed independently. To decode the anonymized text, you need to use the `/decode` endpoint from the backend API.
+
+## Changing Modes
+
+The application provides different modes for various text-related operations:
+
+- Anonymize Mode: Use this mode by clicking the 'Anonymize' button. This mode uses the Named Entity Recognition (NER) model from the Hugging Face Transformers library to anonymize the text.
+- Decode Mode: The logic is built and working for this mode, use by calling the `/decode` endpoint from the backend API. This mode decodes the anonymized text to its original form.  (Add a Decode Button in App.js for front end functionality)
+- Remove Spaces and Line Breaks Mode: Use this mode by clicking the 'Remove Spaces' button. This mode removes all spaces and line breaks from the text.
+
+## Code Explanation
+
+This app includes a backend Flask API and a frontend built using React.
+
+### Defining the HTTP endpoints
+
+The Flask API offers the following four HTTP endpoints:
+
+- `/anonymize`: This endpoint receives a POST request with the text to be anonymized. It uses the Named Entity Recognition (NER) model from the Hugging Face Transformers library for anonymization.
+- `/decode`: This endpoint receives a POST request with anonymized text and a mapping of anonymized entities to their original entities. It decodes the text by replacing the anonymized entities with their originals.
+- `/removeSpacesAndLineBreaks`: This endpoint receives a POST request with the text and returns the text with all spaces and line breaks removed.
+- `/getCharAndTokenCount`: This endpoint receives a POST request with the text and returns the character count and token count of the text.
+
+### Defining the React Components
+
+The frontend is built using the React library. The main component is TextModifier, which maintains several states, including input text, output text, mapping of original entities to their replacements, and character/token counts for both the input and output text. These states are updated based on user interaction and the responses from the Flask API.
+
+### Applying CSS Styling
+
+The frontend uses CSS for styling. Flexbox is used for layout, and several containers and items are defined and aligned within them. The CSS file also defines styles for text areas, buttons, and character/token count displays.
+
+Enjoy and feel free to contribute!
+
+# TODO
+
+- [ ] Build logic to remove comments from code.  Add button on front end. (This will lower token input for larger codebases)
+- [ ] Continue working on "Decode" functionality
+- [ ] Adjust "Anonymizer" function to work with lower case names, places, etc
+- [ ] Continue testing various names/places and add to list of edge cases for ones that do not transform as expected
+- [ ] Build Tests
+
+'''
+'''--- app.py ---
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from transformers import pipeline
+from tiktoken import get_encoding
+
+app = Flask(__name__)
+CORS(app)
+
+enc = get_encoding("cl100k_base")  # or enc = tiktoken.encoding_for_model("gpt-4")
+
+ner = pipeline('ner')
+
+# This dictionary stores the mapping between original entities and their replacements
+entity_mapping = {}
+
+@app.route('/anonymize', methods=['POST'])
+def anonymize():
+    # Clear the entity_mapping dictionary at the beginning of each request
+    entity_mapping.clear()
+
+    text = request.json.get('text', '')
+    out = ner(text)
+
+    # Create a memory to remember which original entity corresponds to which placeholder
+    memory = {}
+
+    # Initialize counters for each type of entity
+    name_counter = 1
+    location_counter = 1
+    organization_counter = 1
+
+    # Sort entities by start offset in ascending order
+    out.sort(key=lambda e: (e['start'], e['end']))
+
+    # Group consecutive entities of the same type
+    grouped_entities = []
+    for entity in out:
+        if not grouped_entities or grouped_entities[-1]['entity'] != entity['entity'] or grouped_entities[-1]['end'] != entity['start']:
+            grouped_entities.append(entity)
+        else:
+            grouped_entities[-1]['end'] = entity['end']
+            grouped_entities[-1]['word'] += ' ' + entity['word']
+
+    # Sort grouped entities by start offset in descending order
+    grouped_entities.sort(key=lambda e: (-e['start'], -e['end']))
+
+    # Define a set of conjunctions that we won't replace
+    conjunctions = {"and", "or"}
+
+    # Replace named entities
+    for entity in grouped_entities:
+        # If the entity is a conjunction, skip it
+        if entity['word'].lower() in conjunctions:
+            continue
+
+        # If the entity has already been replaced before, use the same replacement
+        if entity['word'] in memory:
+            replacement = memory[entity['word']]
+        else:
+            # Choose a new replacement based on entity type
+            if entity['entity'] in ['B-PER', 'I-PER']:
+                replacement = f"Name{name_counter}"
+                name_counter += 1
+            elif entity['entity'] in ['B-LOC', 'I-LOC']:
+                replacement = f"Place{location_counter}"
+                location_counter += 1
+            elif entity['entity'] in ['B-ORG', 'I-ORG']:
+                replacement = f"Group{organization_counter}"
+                organization_counter += 1
+
+            # Remember this replacement for future use
+            memory[entity['word']] = replacement
+            entity_mapping[replacement] = entity['word']
+
+        # Replace the entity in the original text
+        text = text[:entity['start']] + replacement + text[entity['end']:]
+    
+    return jsonify({'anonymizedText': text, 'mapping': entity_mapping, 'characterCount': len(text), 'tokenCount': len(enc.encode(text))})
+
+@app.route('/decode', methods=['POST'])
+def decode():
+    text = request.json.get('text', '')
+    mapping = request.json.get('mapping', {})
+    for anonymized_entity, original_entity in mapping.items():
+        text = text.replace(anonymized_entity, original_entity)
+    
+    # Clear the entity_mapping dictionary after decoding the text
+    entity_mapping.clear()
+    
+    return jsonify({'decodedText': text, 'characterCount': len(text), 'tokenCount': len(enc.encode(text))})
+
+@app.route('/removeSpacesAndLineBreaks', methods=['POST'])
+def remove_spaces_and_line_breaks():
+    data = request.get_json()
+    input_text = data.get('text')
+    
+    # Remove whitespace and line breaks
+    output_text = input_text.replace(" ", "").replace("\n", "")
+    
+    return jsonify({'text': output_text, 'characterCount': len(output_text), 'tokenCount': len(enc.encode(output_text))}), 200
+
+@app.route('/getCharAndTokenCount', methods=['POST'])
+def get_char_and_token_count():
+    text = request.get_json()['text']
+    char_count = len(text)
+    token_count = len(enc.encode(text))
+    return jsonify({'charCount': char_count, 'tokenCount': token_count})
+
+if __name__ == "__main__":
+    app.run(port=5000)
+'''
+'''--- package.json ---
+{
+  "name": "anonymizer",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "gpt-3-encoder": "^1.1.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4",
+    "whatwg-fetch": "^3.6.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+
+'''
+'''--- public/index.html ---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+
+'''
+'''--- public/manifest.json ---
+{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+
+'''
+'''--- public/robots.txt ---
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
+
+'''
+'''--- requirements.txt ---
+flask
+flask-cors
+transformers
+tiktoken
+
+'''
+'''--- src/App.css ---
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.textareaContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.inputContainer,
+.outputContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.inputArea,
+.outputArea {
+  height: 75vh;
+  margin: 10px 0;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  gap: 10px;
+}
+
+.anonymizeButton,
+.decodeButton,
+.transformButton {
+  font-size: 1em;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.anonymizeButton:hover,
+.decodeButton:hover,
+.transformButton:hover {
+  background-color: #0056b3;
+}
+
+.countContainer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.count {
+  margin-bottom: 5px;
+}
+
+'''
+'''--- src/App.js ---
+import React, { useState, useEffect } from "react";
+import "./App.css";
+
+const TextModifier = () => {
+  const [inputText, setInputText] = useState("");
+  const [outputText, setOutputText] = useState("");
+  const [mapping, setMapping] = useState({});
+  const [inputCharCount, setInputCharCount] = useState(0);
+  const [outputCharCount, setOutputCharCount] = useState(0);
+  const [inputTokenCount, setInputTokenCount] = useState(0);
+  const [outputTokenCount, setOutputTokenCount] = useState(0);
+
+  useEffect(() => {
+    fetchCharAndTokenCount(inputText, setInputCharCount, setInputTokenCount);
+    fetchCharAndTokenCount(outputText, setOutputCharCount, setOutputTokenCount);
+  }, [inputText, outputText]);
+
+  const fetchCharAndTokenCount = async (text, setCharCount, setTokenCount) => {
+    const response = await fetch("http://localhost:5000/getCharAndTokenCount", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setCharCount(data.charCount);
+      setTokenCount(data.tokenCount);
+    } else {
+      console.error(
+        "Failed to fetch character and token count:",
+        response.status
+      );
+    }
+  };
+
+  const anonymize = async () => {
+    const response = await fetch("http://localhost:5000/anonymize", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: inputText }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setOutputText(data.anonymizedText);
+      setMapping(data.mapping);
+    } else {
+      console.error("Failed to anonymize the text:", response.status);
+    }
+  };
+
+  const decode = async () => {
+    const response = await fetch("http://localhost:5000/decode", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: outputText, mapping: mapping }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setOutputText(data.decodedText);
+    } else {
+      console.error("Failed to decode the text:", response.status);
+    }
+  };
+
+  const removeSpacesAndLineBreaks = async () => {
+    const response = await fetch(
+      "http://localhost:5000/removeSpacesAndLineBreaks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: inputText }),
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      setOutputText(data.text);
+    } else {
+      console.error("Failed to transform the text:", response.status);
+    }
+  };
+
+  return (
+    <div className="container">
+      <div className="textareaContainer">
+        <div className="inputContainer">
+          <textarea
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            className="inputArea"
+          />
+          <div className="countContainer">
+            <div className="count">Character count: {inputCharCount}</div>
+            <div className="count">Token count: {inputTokenCount}</div>
+          </div>
+        </div>
+        <div className="buttonContainer">
+          <button onClick={anonymize} className="anonymizeButton">
+            Anonymize
+          </button>
+          <button
+            onClick={removeSpacesAndLineBreaks}
+            className="transformButton"
+          >
+            Remove Spaces
+          </button>
+        </div>
+        <div className="outputContainer">
+          <textarea
+            value={outputText}
+            onChange={(e) => setOutputText(e.target.value)}
+            className="outputArea"
+          />
+          <div className="countContainer">
+            <div className="count">Character count: {outputCharCount}</div>
+            <div className="count">Token count: {outputTokenCount}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TextModifier;
+
+'''
+'''--- src/App.test.js ---
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+
+'''
+'''--- src/index.css ---
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+'''
+'''--- src/index.js ---
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+
+'''
+'''--- src/reportWebVitals.js ---
+const reportWebVitals = onPerfEntry => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+
+'''
+'''--- src/setupTests.js ---
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+
+'''
