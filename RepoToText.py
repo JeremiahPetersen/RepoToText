@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from requests.exceptions import RequestException
 from retry import retry
 
 app = Flask(__name__)
@@ -43,7 +44,7 @@ class GithubRepoScraper:
                         file_content += f"\n'''--- {content_file.path} ---\n"
                         try:
                             file_content += content_file.decoded_content.decode("utf-8")
-                        except:  # catch any decoding errors
+                        except UnicodeDecodeError: # catch decoding errors
                             file_content += "[Content not decodable]"
                         file_content += "\n'''"
                         files_data.append(file_content)
@@ -60,10 +61,10 @@ class GithubRepoScraper:
         if not self.doc_link:
             return ""
         try:
-            page = requests.get(self.doc_link)
+            page = requests.get(self.doc_link, timeout=10)
             soup = BeautifulSoup(page.content, 'html.parser')
             return soup.get_text(separator="\n")
-        except Exception as e:
+        except RequestException as e:
             print(f"Error fetching documentation: {e}")
             return ""
 
