@@ -1,7 +1,6 @@
-github
-datetime
+pygithub
 beautifulsoup4
 requests
 flask
-flask-cors
+flask_cors
 retry
