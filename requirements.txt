@@ -5,7 +5,3 @@ requests
 flask
 flask-cors
 retry
-
-axios
-react
-react-dom
