@@ -1,3 +1,6 @@
+![example workflow](https://github.com/JeremiahPetersen/RepoToText/actions/workflows/pylint.yml/badge.svg)
+![example workflow](https://github.com/JeremiahPetersen/RepoToText/actions/workflows/es-lint.yml/badge.svg)
+
 ![repo to text 5](https://github.com/JeremiahPetersen/RepoToText/assets/118206017/0d65016d-6388-48e0-b833-4ea1a169acfe)
 
 ![repo to text 7](https://github.com/JeremiahPetersen/RepoToText/assets/118206017/7d28fa8f-8bb1-4ddd-99f3-b33ddb26f0e9)
