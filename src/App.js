@@ -1,64 +1,64 @@
-import React, { useState } from "react";
-import axios from "axios";
-import "./App.css";
+import React, { useState } from 'react';
+import axios from 'axios';
+import './App.css';
 
 function App() {
   const [FILE_TYPES, setFileTypes] = useState([
-    ".txt",
-    ".py",
-    ".js",
-    ".sql",
-    ".env",
-    ".json",
-    ".html",
-    ".css",
-    ".md",
-    ".ts",
-    ".java",
-    ".cpp",
-    ".c",
-    ".php",
-    ".rb",
-    ".xml",
-    ".yml",
-    ".md",
-    ".sh",
-    ".swift",
-    ".h",
-    ".pyw",
-    ".asm",
-    ".bat",
-    ".cmd",
-    ".cls",
-    ".coffee",
-    ".erb",
-    ".go",
-    ".groovy",
-    ".htaccess",
-    ".java",
-    ".jsp",
-    ".lua",
-    ".make",
-    ".matlab",
-    ".pas",
-    ".perl",
-    ".pl",
-    ".ps1",
-    ".r",
-    ".scala",
-    ".scm",
-    ".sln",
-    ".vb",
-    ".vbs",
-    ".xhtml",
-    ".xsl",
+    '.txt',
+    '.py',
+    '.js',
+    '.sql',
+    '.env',
+    '.json',
+    '.html',
+    '.css',
+    '.md',
+    '.ts',
+    '.java',
+    '.cpp',
+    '.c',
+    '.php',
+    '.rb',
+    '.xml',
+    '.yml',
+    '.md',
+    '.sh',
+    '.swift',
+    '.h',
+    '.pyw',
+    '.asm',
+    '.bat',
+    '.cmd',
+    '.cls',
+    '.coffee',
+    '.erb',
+    '.go',
+    '.groovy',
+    '.htaccess',
+    '.java',
+    '.jsp',
+    '.lua',
+    '.make',
+    '.matlab',
+    '.pas',
+    '.perl',
+    '.pl',
+    '.ps1',
+    '.r',
+    '.scala',
+    '.scm',
+    '.sln',
+    '.vb',
+    '.vbs',
+    '.xhtml',
+    '.xsl',
   ]);
-  const [repoUrl, setRepoUrl] = useState("");
-  const [docUrl, setDocUrl] = useState("");
-  const [response, setResponse] = useState("");
+  const [repoUrl, setRepoUrl] = useState('');
+  const [docUrl, setDocUrl] = useState('');
+  const [response, setResponse] = useState('');
   const [selectedFileTypes, setSelectedFileTypes] = useState([]);
-  const [fileSelection, setFileSelection] = useState("all");
-  const [customFileType, setCustomFileType] = useState("");
+  const [fileSelection, setFileSelection] = useState('all');
+  const [customFileType, setCustomFileType] = useState('');
 
   const handleRepoChange = (e) => {
     setRepoUrl(e.target.value);
@@ -86,19 +86,19 @@ function App() {
     if (customFileType && !FILE_TYPES.includes(customFileType)) {
       setFileTypes([...FILE_TYPES, customFileType]);
     }
-    setCustomFileType("");
+    setCustomFileType('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     let fileTypesToSend = selectedFileTypes;
-    if (fileSelection === "all") {
+    if (fileSelection === 'all') {
       fileTypesToSend = FILE_TYPES;
     }
 
     try {
-      const result = await axios.post("http://localhost:5000/scrape", {
+      const result = await axios.post('http://localhost:5000/scrape', {
         repoUrl,
         docUrl,
         selectedFileTypes: fileTypesToSend,
@@ -110,9 +110,9 @@ function App() {
   };
 
   const handleCopyText = () => {
-    const outputArea = document.querySelector(".outputArea");
+    const outputArea = document.querySelector('.outputArea');
     outputArea.select();
-    document.execCommand("copy");
+    document.execCommand('copy');
   };
 
   return (
@@ -135,7 +135,7 @@ function App() {
             <input
               type="radio"
               value="all"
-              checked={fileSelection === "all"}
+              checked={fileSelection === 'all'}
               onChange={handleFileSelectionChange}
             />
             <label>All Files</label>
@@ -144,13 +144,13 @@ function App() {
             <input
               type="radio"
               value="select"
-              checked={fileSelection === "select"}
+              checked={fileSelection === 'select'}
               onChange={handleFileSelectionChange}
             />
             <label>Select File Types</label>
           </div>
         </div>
-        {fileSelection === "select" && (
+        {fileSelection === 'select' && (
           <div className="fileTypesContainer">
             {FILE_TYPES.map((fileType, index) => (
               <div key={index}>
