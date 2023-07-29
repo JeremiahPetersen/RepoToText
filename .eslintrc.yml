@@ -2,18 +2,11 @@ env:
   browser: true
   es2021: true
 extends:
-  - "standard"
-  - "plugin:react/recommended"
-  - "prettier"
+  - standard
+  - plugin:react/recommended
 parserOptions:
-  ecmaVersion: 12
+  ecmaVersion: latest
   sourceType: module
 plugins:
   - react
-rules:
-  semi:
-    - "error"
-    - "always"
-  quotes:
-    - "error"
-    - "double"
+rules: {}
