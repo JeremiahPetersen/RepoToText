@@ -1,3 +1,9 @@
+"""
+This module handles the back end flask server for RepoToText
+"""
+
+# pylint: disable=line-too-long
+
 from github import Github, RateLimitExceededException
 import os
 from datetime import datetime
@@ -7,7 +13,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import re
 from retry import retry
-import time
 
 app = Flask(__name__)
 CORS(app)
