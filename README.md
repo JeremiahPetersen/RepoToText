@@ -89,7 +89,8 @@ To run the application, follow these steps:
 
 ## TODO
 
-- [ ] FIX: Broken file types: .ipynb | 
+- [ ] FIX: Broken file types: .ipynb |
+- [ ] FIX: FolderToText - fix so a user can pick one folder (currently only working when user selects individual files
 - [ ] add in the ability to work with private repositories
 - [ ] create a small desktop app via PyQT or an executable file
 - [ ] add ability to store change history and update .txt to reflect working changes
