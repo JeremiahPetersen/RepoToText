@@ -29,7 +29,7 @@ FolderToText.py is a script that allows you to turn a local folder, or local fil
 
 - Creates a .txt with ('''---) separating each file from the repo.
 - Each file from the repo has a header after ('''---) with the file path as the title.
-- The .txt file is saved in the root directory.
+- The .txt file is saved in the /data folder
 - You can add a URL to a documentation page and the documentation page will append to the top of the .txt file (great to use for tech that came out after Sep 2021).
 
 ## Tech Used
