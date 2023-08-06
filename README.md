@@ -48,7 +48,7 @@ To run the application using Docker, follow these steps:
 2. Set up the environment variable `GITHUB_API_KEY` in the `.env` file.
 3. Build the Docker images with `docker-compose build`.
 4. Start the containers with `docker-compose up`.
-5. Access the application in a web browser and enter the GitHub repository URL and documentation URL (if available).
+5. Access the application (http://localhost:3000) in a web browser and enter the GitHub repository URL and documentation URL (if available).
 6. Choose All files or choose specific file types.
 7. Click the "Submit" button to initiate the scraping process. The converted text will be displayed in the output area, and it will also be saved to the project root directory.
 8. You can also click the "Copy Text" button to copy the generated text to the clipboard.
