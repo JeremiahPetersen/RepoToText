@@ -1,0 +1,18 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend.dockerfile
+    volumes:
+      - ./data:/app/data
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend.dockerfile
+    ports:
+      - 3000:3000
