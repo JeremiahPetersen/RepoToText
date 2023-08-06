@@ -8,7 +8,7 @@
 
 ## RepoToText
 
-RepoToText is a web app that scrapes a GitHub repository and converts its files into a single organized .txt. It allows you to enter the URL of a GitHub repository and an optional documentation URL (the doc info will append to the top of the .txt). The app retrieves the contents of the repository, including all files and directories, and also fetches the documentation from the provided URL and includes it in a single organized text file. The .txt file will be saved in the root project directory with user/repo/timestamp info. This file can then be uploaded to Code Interpreter and you can use the chatbot to interact with the entire GitHub repo. 
+RepoToText is a web app that scrapes a GitHub repository and converts its files into a single organized .txt. It allows you to enter the URL of a GitHub repository and an optional documentation URL (the doc info will append to the top of the .txt). The app retrieves the contents of the repository, including all files and directories, and also fetches the documentation from the provided URL and includes it in a single organized text file. The .txt file will be saved in the /data folder with user + repo + timestamp info. This file can then be uploaded to Code Interpreter and you can use the chatbot to interact with the entire GitHub repo. 
 
 ### Environment Configuration
 Add your GitHub API Key in the .env file 
@@ -29,7 +29,7 @@ FolderToText.py is a script that allows you to turn a local folder, or local fil
 
 - Creates a .txt with ('''---) separating each file from the repo.
 - Each file from the repo has a header after ('''---) with the file path as the title.
-- The .txt file is saved in the /data folder
+- The .txt file is saved in the /data folder 
 - You can add a URL to a documentation page and the documentation page will append to the top of the .txt file (great to use for tech that came out after Sep 2021).
 
 ## Tech Used
@@ -50,7 +50,7 @@ To run the application using Docker, follow these steps:
 4. Start the containers with `docker-compose up`.
 5. Access the application (http://localhost:3000) in a web browser and enter the GitHub repository URL and documentation URL (if available).
 6. Choose All files or choose specific file types.
-7. Click the "Submit" button to initiate the scraping process. The converted text will be displayed in the output area, and it will also be saved to the project root directory.
+7. Click the "Submit" button to initiate the scraping process. The converted text will be displayed in the output area, and it will also be saved in the /data folder. 
 8. You can also click the "Copy Text" button to copy the generated text to the clipboard.
 
 ## TODO
