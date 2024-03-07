@@ -3,7 +3,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile.backend.dockerfile
+      dockerfile: Dockerfile.backend
     volumes:
       - ./data:/app/data
     ports:
@@ -13,6 +13,6 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend.dockerfile
+      dockerfile: Dockerfile.frontend
     ports:
       - 3000:3000
