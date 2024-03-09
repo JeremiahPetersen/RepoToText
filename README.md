@@ -8,7 +8,7 @@
 
 ## RepoToText
 
-RepoToText is a web app that scrapes a GitHub repository and converts its files into a single organized .txt. It allows you to enter the URL of a GitHub repository and an optional documentation URL (the doc info will append to the top of the .txt). The app retrieves the contents of the repository, including all files and directories, and also fetches the documentation from the provided URL and includes it in a single organized text file. The .txt file will be saved in the /data folder with user + repo + timestamp info. This file can then be uploaded to Code Interpreter and you can use the chatbot to interact with the entire GitHub repo. 
+RepoToText is a web app that scrapes a GitHub repository and converts its files into a single organized .txt. It allows you to enter the URL of a GitHub repository and an optional documentation URL (the doc info will append to the top of the .txt). The app retrieves the contents of the repository, including all files and directories, and also fetches the documentation from the provided URL and includes it in a single organized text file. The .txt file will be saved in the /data folder with user + repo + timestamp info. This file can then be uploaded to (GPT-4, Claude Opus, etc) and you can use the chatbot to interact with the entire GitHub repo. 
 
 ### Environment Configuration
 Add your GitHub API Key in the .env file 
