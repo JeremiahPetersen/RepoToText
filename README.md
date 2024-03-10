@@ -23,16 +23,16 @@ To run the application using Docker, follow these steps:
 7. Click the "Submit" button to initiate the scraping process. The converted text will be displayed in the output area, and it will also be saved in the /data folder. 
 8. You can also click the "Copy Text" button to copy the generated text to the clipboard.
 
+## Prompt Example
+
+This is a .txt file that represents an entire GitHub repository. The repository's individual files are separated by the sequence '''--- , followed by the file path, ending with ---. Each file's content begins immediately after its file path and extends until the next sequence of '''--- *Add your idea here (Example)*: Please create a react front end that will work with the back end 
+
 ### Environment Configuration
 Add your GitHub API Key in the .env file 
 
 ```
 GITHUB_API_KEY='YOUR GITHUB API KEY HERE'
 ```
-
-## Prompt Example
-
-This is a .txt file that represents an entire GitHub repository. The repository's individual files are separated by the sequence '''--- , followed by the file path, ending with ---. Each file's content begins immediately after its file path and extends until the next sequence of '''--- *Add your idea here (Example)*: Please create a react front end that will work with the back end 
 
 ## FolderToText
 
