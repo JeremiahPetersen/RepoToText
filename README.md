@@ -65,13 +65,13 @@ FolderToText.py is a script that allows you to turn a local folder, or local fil
 ## TODO
 
 - [x] Add Docker to project
+- [ ] Add Dark Mode
+- [ ] Build web app for (https://repototext.com/)
 - [ ] FIX: Broken file types: .ipynb
 - [ ] FIX: FolderToText - fix so a user can pick one folder (currently only working when user selects individual files)
 - [ ] Add in the ability to work with private repositories
-- [ ] Create a small desktop app via PyQT or an executable file
 - [ ] Add ability to store change history and update .txt to reflect working changes
-- [ ] Add checker function to make sure .txt is current repo version
+- [ ] Add function to make sure .txt is current repo version
 - [ ] Adjust UI for flow, including change textarea output width, adding file management and history UI
-- [ ] Explore prompt ideas including breaking the prompts into discrete steps that nudge the model along
 
 ---
