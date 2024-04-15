@@ -61,6 +61,7 @@ function App() {
   const [selectedFileTypes, setSelectedFileTypes] = useState([]);
   const [fileSelection, setFileSelection] = useState('all');
   const [customFileType, setCustomFileType] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const handleRepoChange = (e) => {
     setRepoUrl(e.target.value);
@@ -117,8 +118,12 @@ function App() {
     document.execCommand('copy');
   };
 
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <div className="container">
+    <div className={`container ${isDarkMode ? 'dark-mode' : ''}`}>
       <div className="inputContainer">
         <input
           value={repoUrl}
@@ -184,6 +189,9 @@ function App() {
         </button>
         <button onClick={handleCopyText} className="copyButton">
           Copy Text
+        </button>
+        <button onClick={toggleTheme} className="toggleThemeButton">
+          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
         </button>
       </div>
       <div className="outputContainer">
