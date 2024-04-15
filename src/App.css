@@ -118,3 +118,15 @@
 .copyButton:hover {
   background-color: #0056b3;
 }
+
+/* Dark mode */
+.dark-mode {
+  background-color: #333;
+  color: white;
+}
+
+.dark-mode .inputArea, .dark-mode .smallInputArea, .dark-mode .outputArea {
+  background-color: #555;
+  color: white;
+  border-color: #888;
+}
