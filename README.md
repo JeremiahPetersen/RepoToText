@@ -65,7 +65,7 @@ FolderToText.py is a script that allows you to turn a local folder, or local fil
 ## TODO
 
 - [x] Add Docker to project
-- [ ] Add Dark Mode
+- [x] Add Dark Mode
 - [ ] Build web app for (https://repototext.com/)
 - [ ] FIX: Broken file types: .ipynb
 - [ ] FIX: FolderToText - fix so a user can pick one folder (currently only working when user selects individual files)
