@@ -22,7 +22,7 @@ Working front-end project: https://github.com/JeremiahPetersen/CaseConnect/tree/
 
 To run the application using Docker, follow these steps:
 
-1. Clone the repository.
+1. Clone the repository.  Create a .env file in the root folder.
 2. Set up the environment variable `GITHUB_API_KEY` in the `.env` file.
 3. Build the Docker images with `docker compose build`.
 4. Start the containers with `docker compose up`.
